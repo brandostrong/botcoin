@@ -197,6 +197,23 @@ def bollingerBandsSafe(shortTerm, longTerm, cash, botcoins, customParameters, ch
    
     return lastLeverage
 
+#This code is plug and play within any hypothesis
+#it handles the realtime creation and modification of a dataframe during the simulation
+#Use cases for this include AI input, as the other dataframe method is for AI training
+#Currently it dumps short data to a dataframe, which itself
+def dataFrameSimCode(shortTerm, longTerm, cash, botcoins, customParameters, chartingParameters):
+    assert isinstance(shortTerm, DiscreteData)
+    assert isinstance(longTerm, DiscreteData)
+    assert isinstance(cash, Decimal)
+    assert isinstance(botcoins, Decimal), "{} instead".format(type(botcoins))
+    assert isinstance(customParameters, dict)
+    assert isinstance(chartingParameters, dict)
+    print("Hello")
+    return 0
+    
+    
+    
+    
 class HypothesisVariation:
     def __init__(self, function, **kwargs):
         assert callable(function)

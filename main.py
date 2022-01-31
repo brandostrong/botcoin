@@ -29,100 +29,92 @@ class HypothesisTesterStupid:
 
 def DataFrame(data):
     
-    short = pd.DataFrame([val.__dict__ for val in data['short']]).dropna()
+    #short = pd.DataFrame([val.__dict__ for val in data['short']]).dropna()
     long = pd.DataFrame([val.__dict__ for val in data['long']]).dropna()
     #plt.plot_date(short.date,short.safeMeanPrice, linestyle='solid', marker='')
         
     #check for linearity with scatter plots
     
-    #plt.scatter(short.safeMeanDeltaVolumePerTransaction, short.safeMeanPrice)
     
     #create additional data
-    # def signMomentum(sign):
-    #     momentum = []
-    #     mom = 0
-    #     LastSignPositive = True
-    #     for index, sign in enumerate(sign):
-    #         if sign == 0: #concern, we should probably count very small differences as 0 instead of increasing momentum
-    #             mom = 0
-    #         if sign == 1:
-    #             if LastSignPositive == True:
-    #                 mom += 1
-    #             else:
-    #                 mom = 1
-    #             LastSignPositive = True
-    #         if sign == -1:
-    #             if LastSignPositive == True:
-    #                 mom = -1
-    #             else:
-    #                 mom -= 1
-    #             LastSignPositive = False
-    #         if np.isnan(sign):
-    #             momentum.append(np.nan)
-    #         else:
-    #             momentum.append(mom)
-    #     return momentum
-    # short['deltaPrice1Row'] = short['safeMeanPrice'].diff()
-    # short['deltaPrice5Row'] = short['safeMeanPrice'].diff(periods=5)
-    # short['deltaPrice10Row'] = short['safeMeanPrice'].diff(periods=10)
-    # short['deltaPrice25Row'] = short['safeMeanPrice'].diff(periods=25)
-    # short['deltaPrice50Row'] = short['safeMeanPrice'].diff(periods=50)
-    # short['deltaPrice100Row'] = short['safeMeanPrice'].diff(periods=100)
-    # short['deltaPrice200Row'] = short['safeMeanPrice'].diff(periods=200)
-    # short['deltaPrice500Row'] = short['safeMeanPrice'].diff(periods=500)
-    # #^^ if you graph all of these with the above scatter, you will find linearity starting to increase at >100 rows ^^ which makes some sense
+    def signMomentum(sign):
+        momentum = []
+        mom = 0
+        LastSignPositive = True
+        for index, sign in enumerate(sign):
+            if sign == 0: #concern, we should probably count very small differences as 0 instead of increasing momentum
+                mom = 0
+            if sign == 1:
+                if LastSignPositive == True:
+                    mom += 1
+                else:
+                    mom = 1
+                LastSignPositive = True
+            if sign == -1:
+                if LastSignPositive == True:
+                    mom = -1
+                else:
+                    mom -= 1
+                LastSignPositive = False
+            if np.isnan(sign):
+                momentum.append(np.nan)
+            else:
+                momentum.append(mom)
+        return momentum
+    long['deltaPrice1Row'] = long['price'].diff()
+    long['deltaPrice5Row'] = long['price'].diff(periods=5)
+    #long['deltaPrice500Row'] = long['safeMeanPrice'].diff(periods=500)
+    #^^ if you graph all of these with the above scatter, you will find linearity starting to increase at >100 rows ^^ which makes some sense
     
     
-    # short['deltaSign1Row'] = np.sign(short['deltaPrice1Row'])
-    # short['signMomentum1Row'] = signMomentum(short['deltaSign1Row'])
-    # short['deltaSign500Row'] = np.sign(short['deltaPrice500Row'])
-    # short['signMomentum500Row'] = signMomentum(short['deltaSign500Row'])
-    # short['std5Row'] = short['safeMeanPrice'].rolling(5).std()
-    # short['std100Row'] = short['safeMeanPrice'].rolling(100).std()
-    # short['volume5Row'] = short['volume'].rolling(5).sum()
-    # short['volume100Row'] = short['volume'].rolling(100).sum()
-    # short['volume500Row'] = short['volume'].rolling(500).sum()
+    long['deltaSign1Row'] = np.sign(long['deltaPrice1Row'])
+    long['signMomentum1Row'] = signMomentum(long['deltaSign1Row'])
+    #long['deltaSign500Row'] = np.sign(long['deltaPrice500Row'])
+    #long['signMomentum500Row'] = signMomentum(long['deltaSign500Row'])
+    long['std5Row'] = long['price'].rolling(5).std()
+    long['std100Row'] = long['price'].rolling(100).std()
+    long['volume5Row'] = long['volume'].rolling(5).sum()
+    #long['volume500Row'] = long['volume'].rolling(500).sum()
     
-    # short['movingAverage5'] = short['safeMeanPrice'].rolling(5).sum()/5
-    # short['movingAverage50'] = short['safeMeanPrice'].rolling(50).sum()/50
-    # short['movingAverage500'] = short['safeMeanPrice'].rolling(500).sum()/500
-    
+    long['movingAverage5'] = long['price'].rolling(5).sum()/5
+    long['movingAverage50'] = long['price'].rolling(50).sum()/50
+    #long['movingAverage500'] = long['safeMeanPrice'].rolling(500).sum()/500
     # plt.scatter(short.deltaPrice500Row, short.safeMeanPrice)
     # plt.scatter(short.signMomentum1Row, short.safeMeanPrice)
     
     
-    #linear-ish combos: std5row, safemeanprice
-    #signmomentum500row, deltaprice500row -- also on log scale
-    #signmomentum500row * volume500Row, deltaprice500row
+    # linear-ish combos: std5row, safemeanprice
+    # signmomentum500row, deltaprice500row -- also on log scale
+    # signmomentum500row * volume500Row, deltaprice500row
     
     
     
-    with pd.ExcelWriter('dataframeETHUSD.xlsx') as writer:  
-        short.to_excel(writer, sheet_name='short')
+    with pd.ExcelWriter('btcusdlongtest.xlsx') as writer:  
+        #short.to_excel(writer, sheet_name='short')
         long.to_excel(writer, sheet_name='long')
 
 
-    return short,long
+    return long#,long
 
 
 
 def main():
     THREAD_COUNT = os.cpu_count()
     print("I have {} cores".format(THREAD_COUNT))
-    FILENAME = "XMRUSD.csv"
+    FILENAME = "XBTUSD.csv"
     # print(hypothesisTester(FILENAME, hypothesis.equationMethod))
     
 
-    startingDate = datetime(year=2018, month=1, day=2, hour=0, minute=0, second=0)
-    endingDate = datetime(year=2020, month=12, day=31)
+    startingDate = datetime(year=2017, month=1, day=1, hour=0, minute=0, second=0)
+    endingDate = datetime(year=2021, month=12, day=31)
     shortTermWindow = timedelta(hours=1)
     longTermWindow = timedelta(hours=24)
 
-    # import time
-    # start = time.time()
+    import time
+    start = time.time()
     data = getData(FILENAME, startingDate, endingDate, shortTermWindow, longTermWindow)
-    shortdf,longdf = DataFrame(data)
-    # print("Took {} seconds".format(time.time() - start))
+    shortdf = DataFrame(data) #,longdf
+    print("Took {} seconds".format(time.time() - start))
     # for x in longTerm:
     #     print("L RANGE:", x.date, " - ", x.endDate)
     # # for x in shortTerm:

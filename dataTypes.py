@@ -3,20 +3,18 @@ from statistics import median, mean, stdev
 
 class DataPoint:
     def __init__(self, time, price, quantity):
-        assert isinstance(time, int)
-        assert isinstance(quantity, float)
-        assert isinstance(price, float)
+
 
         self.time = time
         self.quantity = quantity
         self.price = price
 
     def readUnix(self,givenTimestamp) -> str:
-        assert isinstance(givenTimestamp, int)
+
         return str(datetime.fromtimestamp(givenTimestamp).strftime("%m/%d/%Y %H:%M"))
 
     def timestampToDatetime(self,givenTiemstamp) -> datetime:
-        assert isinstance(givenTiemstamp, int)
+
         return datetime.fromtimestamp(givenTiemstamp)
 
     def __str__(self):
@@ -28,18 +26,15 @@ class DataPoint:
 
 class DiscreteData:
     def __init__(self, rawData, startDate, timestep):
-        assert isinstance(rawData, list)
-        assert all(isinstance(x, DataPoint) for x in rawData)
-        assert isinstance(startDate, datetime)
-        assert isinstance(timestep, timedelta)
+
 
         safeMean = DiscreteData.safeMean
 
         self.date = startDate
         self.endDate = self.date + timestep
 
-        self.safeMeanPrice = safeMean([x.price for x in rawData])
-        self.meanPrice = self.safeMeanPrice
+        #self.safeMeanPrice = safeMean([x.price for x in rawData])
+        #self.meanPrice = self.safeMeanPrice
         self.volume = sum(x.quantity for x in rawData)
 
         if len(rawData) < 1:
@@ -61,7 +56,6 @@ class DiscreteData:
 
     @staticmethod
     def safeMean(input):
-        assert isinstance(input, list)
         if len(input) == 0:
             return None
         elif len(input) == 1:
@@ -71,11 +65,11 @@ class DiscreteData:
 
 
 def convertData(rawData,givenDate,dateRange,givenWindow):
-    assert isinstance(rawData, list)
-    assert all(isinstance(x, DataPoint) for x in rawData)
-    assert isinstance(givenDate, datetime)
-    assert isinstance(dateRange,timedelta)
-    assert isinstance(givenWindow,timedelta)
+    # assert isinstance(rawData, list)
+    # assert all(isinstance(x, DataPoint) for x in rawData)
+    # assert isinstance(givenDate, datetime)
+    # assert isinstance(dateRange,timedelta)
+    # assert isinstance(givenWindow,timedelta)
 
     endDate = givenDate + dateRange
 
