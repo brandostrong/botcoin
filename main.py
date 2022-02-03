@@ -30,7 +30,7 @@ class HypothesisTesterStupid:
 def DataFrame(data):
     
     #short = pd.DataFrame([val.__dict__ for val in data['short']]).dropna()
-    long = pd.DataFrame([val.__dict__ for val in data['long']]).dropna()
+    short = pd.DataFrame([val.__dict__ for val in data['short']]).dropna()
     #plt.plot_date(short.date,short.safeMeanPrice, linestyle='solid', marker='')
         
     #check for linearity with scatter plots
@@ -61,24 +61,24 @@ def DataFrame(data):
             else:
                 momentum.append(mom)
         return momentum
-    long['deltaPrice1Row'] = long['price'].diff()
-    long['deltaPrice5Row'] = long['price'].diff(periods=5)
-    #long['deltaPrice500Row'] = long['safeMeanPrice'].diff(periods=500)
+    short['deltaPrice1Row'] = short['price'].diff()
+    short['deltaPrice5Row'] = short['price'].diff(periods=5)
+    #short['deltaPrice500Row'] = short['safeMeanPrice'].diff(periods=500)
     #^^ if you graph all of these with the above scatter, you will find linearity starting to increase at >100 rows ^^ which makes some sense
     
     
-    long['deltaSign1Row'] = np.sign(long['deltaPrice1Row'])
-    long['signMomentum1Row'] = signMomentum(long['deltaSign1Row'])
-    #long['deltaSign500Row'] = np.sign(long['deltaPrice500Row'])
-    #long['signMomentum500Row'] = signMomentum(long['deltaSign500Row'])
-    long['std5Row'] = long['price'].rolling(5).std()
-    long['std100Row'] = long['price'].rolling(100).std()
-    long['volume5Row'] = long['volume'].rolling(5).sum()
-    #long['volume500Row'] = long['volume'].rolling(500).sum()
+    short['deltaSign1Row'] = np.sign(short['deltaPrice1Row'])
+    short['signMomentum1Row'] = signMomentum(short['deltaSign1Row'])
+    #short['deltaSign500Row'] = np.sign(short['deltaPrice500Row'])
+    #short['signMomentum500Row'] = signMomentum(short['deltaSign500Row'])
+    short['std5Row'] = short['price'].rolling(5).std()
+    short['std100Row'] = short['price'].rolling(100).std()
+    short['volume5Row'] = short['volume'].rolling(5).sum()
+    #short['volume500Row'] = short['volume'].rolling(500).sum()
     
-    long['movingAverage5'] = long['price'].rolling(5).sum()/5
-    long['movingAverage50'] = long['price'].rolling(50).sum()/50
-    #long['movingAverage500'] = long['safeMeanPrice'].rolling(500).sum()/500
+    short['movingAverage5'] = short['price'].rolling(5).sum()/5
+    short['movingAverage50'] = short['price'].rolling(50).sum()/50
+    #short['movingAverage500'] = short['safeMeanPrice'].rolling(500).sum()/500
     # plt.scatter(short.deltaPrice500Row, short.safeMeanPrice)
     # plt.scatter(short.signMomentum1Row, short.safeMeanPrice)
     
@@ -89,12 +89,12 @@ def DataFrame(data):
     
     
     
-    with pd.ExcelWriter('btcusdlongtest.xlsx') as writer:  
+    with pd.ExcelWriter('btcusdshort.xlsx') as writer:  
         #short.to_excel(writer, sheet_name='short')
-        long.to_excel(writer, sheet_name='long')
+        short.to_excel(writer, sheet_name='short')
 
 
-    return long#,long
+    return short#,short
 
 
 
@@ -120,12 +120,12 @@ def main():
     # # for x in shortTerm:
     # #     print("S RANGE:", x.date, " - ", x.endDate)
 
-    result = simulation(startingDate, shortTermWindow, endingDate, data["short"], data["long"], hypothesis.equationMethod, Decimal(1_000))
+    result = simulation(startingDate, shortTermWindow, endingDate, data["short"], data["short"], hypothesis.equationMethod, Decimal(1_000))
     # print("{}% success".format(result["success"]))    
-    simulationPlotter(data["long"], result)
+    simulationPlotter(data["short"], result)
     # print(hypothesisTester(FILENAME, hypothesis.hold))
 
-    # hypothesisTester = HypothesisTester(startingDate, shortTermWindow, endingDate, data["short"], data["long"], Decimal(1_000)).testHypothesis
+    # hypothesisTester = HypothesisTester(startingDate, shortTermWindow, endingDate, data["short"], data["short"], Decimal(1_000)).testHypothesis
 
     # inputList = np.arange(.05, 3, .05)
     # hypothesisList = [hypothesis.HypothesisVariation(hypothesis.bollingerBandsSafe, bollinger_number_of_stdev=i).hypothesis for i in inputList]

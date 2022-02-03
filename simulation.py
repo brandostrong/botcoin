@@ -16,7 +16,7 @@ class RawData:
         self.data = self.readFile()
 
     def readFile(self):
-        assert isinstance(self.filename, str)
+
         file = open(self.filename)
         reader = csv.reader(file)
         i = 0
@@ -29,8 +29,7 @@ class RawData:
         return DATA_COLLECTION
     
     def fetchData(self, givenDate, givenWindow):
-        assert isinstance(givenDate, datetime)
-        assert isinstance(givenWindow, timedelta)
+
         FETCHED_DATA = []
 
         endDate = givenDate + givenWindow
@@ -89,11 +88,6 @@ def setLeverage(myCash, myCoins, coinPrice, soughtLeverage):
 
 
 def getData(filename, startDate, endDate, shortTermWindow, longTermWindow):
-    assert isinstance(filename, str)
-    assert isinstance(startDate, datetime)
-    assert isinstance(endDate, datetime)
-    assert isinstance(shortTermWindow, timedelta)
-    assert isinstance(longTermWindow, timedelta)
     uniqueHash = "{}_{}_{}_{}_{}.pickle".format(filename, startDate.timestamp(), endDate.timestamp(), shortTermWindow.total_seconds(), longTermWindow.total_seconds())
 
     CACHED_DATA_FOLDER = "cache"
@@ -114,15 +108,13 @@ def getData(filename, startDate, endDate, shortTermWindow, longTermWindow):
     dateRange = endDate-startDate
     allData = botcoin.fetchData(startDate, dateRange)
     print("All data between {} and {} has been fetched.".format(startDate, endDate))
-
+    data = 0
 
     convertDataThread = ConvertDataMultiProcess(allData, startDate, dateRange)
-    p = multiprocessing.Pool(2)
-    shortTerm, longTerm = p.map(convertDataThread.convertData, [shortTermWindow, longTermWindow])
+    shortTerm = convertDataThread.convertData(shortTermWindow)
 
     data = {
         "short" : shortTerm,
-        "long" : longTerm,
     }
     file = open(filePath, "wb")
     pickle.dump(data, file)
